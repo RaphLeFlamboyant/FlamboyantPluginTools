@@ -1,4 +1,4 @@
-package me.flamboyant.parameters;
+package me.flamboyant.configurable.parameters;
 
 import org.bukkit.Material;
 

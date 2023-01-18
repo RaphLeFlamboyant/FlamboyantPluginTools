@@ -1,6 +1,6 @@
 package me.flamboyant.utils;
 
-import me.flamboyant.parameters.AParameter;
+import me.flamboyant.configurable.parameters.AParameter;
 
 import java.util.List;
 
