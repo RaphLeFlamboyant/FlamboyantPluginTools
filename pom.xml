@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.flamboyant</groupId>
-    <artifactId>FlamboyantPluginTools</artifactId>
+    <artifactId>plugintools</artifactId>
     <version>0.1</version>
     <packaging>jar</packaging>
 
