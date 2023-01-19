@@ -16,7 +16,9 @@ public class EnumParameterItem extends AParameterItem {
 
     @Override
     protected String getValueText() {
-        return parameter.getPossibleValues()[index].toString();
+        return index >= 0
+                ? parameter.getPossibleValues()[index].toString()
+                : "NONE";
     }
 
     @Override
