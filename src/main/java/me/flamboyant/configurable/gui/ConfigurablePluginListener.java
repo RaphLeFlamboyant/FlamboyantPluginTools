@@ -14,6 +14,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
@@ -54,6 +56,13 @@ public class ConfigurablePluginListener implements Listener {
         Inventory view = ParametersSelectionView.getInstance().getViewInstance(currentlyConfiguringPlugin);
         Common.server.getPluginManager().registerEvents(ParametersSelectionView.getInstance(), Common.plugin);
         player.openInventory(view);
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (event.getView().getTitle() != ParametersSelectionView.getViewID()) return;
+
+        InventoryClickEvent.getHandlerList().unregister(ParametersSelectionView.getInstance());
     }
 
     @EventHandler
