@@ -1,9 +1,8 @@
-package me.flamboyant.configurable.gui.wrapper.items;
+package me.flamboyant.configurable.gui.items;
 
 import me.flamboyant.configurable.parameters.EnumParameter;
-import org.bukkit.inventory.Inventory;
 
-public class EnumParameterItem extends AParameterItem {
+public class EnumParameterItem extends ATraversableParameterItem {
     private int index = 0;
     private EnumParameter parameter;
 
@@ -22,7 +21,7 @@ public class EnumParameterItem extends AParameterItem {
     }
 
     @Override
-    protected void doLeftClickModification(Inventory viewClickFrom) {
+    protected void doLeftClickAction() {
         if (++index == parameter.getPossibleValues().length) {
             if (parameter.isNullable()) {
                 index = -1;
@@ -36,7 +35,7 @@ public class EnumParameterItem extends AParameterItem {
     }
 
     @Override
-    protected void doRightClickModification(Inventory viewClickFrom) {
+    protected void doRightClickAction() {
         if (--index < 0) {
             if (index == -1 && parameter.isNullable()) {
                 parameter.setSelectedValue(null);

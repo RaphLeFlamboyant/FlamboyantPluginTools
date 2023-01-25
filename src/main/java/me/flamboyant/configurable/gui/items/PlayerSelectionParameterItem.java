@@ -1,6 +1,6 @@
-package me.flamboyant.configurable.gui.wrapper.items;
+package me.flamboyant.configurable.gui.items;
 
-import me.flamboyant.configurable.gui.view.PlayerSelectionView;
+import me.flamboyant.configurable.gui.PlayerSelectionView;
 import me.flamboyant.configurable.parameters.PlayerSelectionParameter;
 import me.flamboyant.utils.Common;
 import org.bukkit.Bukkit;
@@ -8,8 +8,12 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Arrays;
 
 public class PlayerSelectionParameterItem extends AParameterItem implements Listener {
     private PlayerSelectionParameter parameter;
@@ -19,22 +23,17 @@ public class PlayerSelectionParameterItem extends AParameterItem implements List
     public PlayerSelectionParameterItem(PlayerSelectionParameter parameter) {
         super(parameter);
 
+        ItemMeta meta = iconItem.getItemMeta();
+        meta.setDisplayName(parameter.getParameterName());
+        meta.setLore(Arrays.asList(parameter.getDescription()));
+        iconItem.setItemMeta(meta);
+
         this.parameter = parameter;
     }
 
     @Override
-    protected String getValueText() {
-        return null;
-    }
-
-    @Override
-    protected void doLeftClickModification(Inventory viewClickFrom) {
-        openPlayerSelectionView(viewClickFrom);
-    }
-
-    @Override
-    protected void doRightClickModification(Inventory viewClickFrom) {
-        openPlayerSelectionView(viewClickFrom);
+    public void onClick(InventoryClickEvent event) {
+        openPlayerSelectionView(event.getClickedInventory());
     }
 
     private void openPlayerSelectionView(Inventory viewClickFrom) {

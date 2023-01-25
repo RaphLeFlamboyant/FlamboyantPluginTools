@@ -1,9 +1,8 @@
-package me.flamboyant.configurable.gui.wrapper.items;
+package me.flamboyant.configurable.gui.items;
 
 import me.flamboyant.configurable.parameters.IntParameter;
-import org.bukkit.inventory.Inventory;
 
-public class IntParameterItem extends AParameterItem {
+public class IntParameterItem extends ATraversableParameterItem {
     protected IntParameter parameter;
 
     public IntParameterItem(IntParameter parameter) {
@@ -18,13 +17,13 @@ public class IntParameterItem extends AParameterItem {
     }
 
     @Override
-    protected void doLeftClickModification(Inventory viewClickFrom) {
+    protected void doLeftClickAction() {
         if (parameter.getValue() < parameter.getMaxValue())
             parameter.setValue(parameter.getValue() + 1);
     }
 
     @Override
-    protected void doRightClickModification(Inventory viewClickFrom) {
+    protected void doRightClickAction() {
         if (parameter.getValue() > parameter.getMinValue())
             parameter.setValue(parameter.getValue() - 1);
     }

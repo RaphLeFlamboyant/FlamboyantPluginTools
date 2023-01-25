@@ -6,16 +6,22 @@ public class AParameter {
     private Material representation;
     private String parameterName;
     private String description;
+    private String category;
 
-    public AParameter(Material representation, String parameterName, String description) {
+    public AParameter(Material representation, String parameterName, String description, String category) {
         this.description = description;
         this.parameterName = parameterName;
         this.representation = representation;
+        this.category = category;
+    }
+
+    public AParameter(Material representation, String parameterName, String description)
+    {
+        this(representation, parameterName, description, "Misc");
     }
 
     public Material getRepresentation() { return representation; }
     public String getParameterName() { return parameterName; }
     public String getDescription() { return description; }
-    public void setParameterName(String newParameterName) { parameterName = newParameterName; }
-    public void setDescription(String newDescription) { description = newDescription; }
+    public String getCategory() { return category; }
 }

@@ -1,6 +1,8 @@
-package me.flamboyant.configurable.gui;
+package me.flamboyant.gui;
 
-import me.flamboyant.configurable.gui.view.ParametersSelectionView;
+import me.flamboyant.configurable.gui.ParameterUtils;
+import me.flamboyant.gui.view.builder.ItemGroupingMode;
+import me.flamboyant.gui.view.common.InventoryGui;
 import me.flamboyant.utils.ChatHelper;
 import me.flamboyant.utils.Common;
 import me.flamboyant.utils.ILaunchablePlugin;
@@ -14,12 +16,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -27,6 +26,7 @@ import java.util.ArrayList;
 public class ConfigurablePluginListener implements Listener {
     private static ConfigurablePluginListener instance;
     private ILaunchablePlugin currentlyConfiguringPlugin;
+    private InventoryGui parametersSelectionView;
     private ItemStack[] opPlayerInventoryContent;
 
     protected ConfigurablePluginListener() {
@@ -49,20 +49,9 @@ public class ConfigurablePluginListener implements Listener {
         opPlayer.getInventory().setItem(0, getParametersItem());
         opPlayer.getInventory().setItem(5, getLaunchItem());
 
+        parametersSelectionView = ParameterUtils.createParametersGui(plugin, ItemGroupingMode.PARTED, false);
+
         Common.server.getPluginManager().registerEvents(this, Common.plugin);
-    }
-
-    public void openParametersView(Player player) {
-        Inventory view = ParametersSelectionView.getInstance().getViewInstance(currentlyConfiguringPlugin);
-        Common.server.getPluginManager().registerEvents(ParametersSelectionView.getInstance(), Common.plugin);
-        player.openInventory(view);
-    }
-
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        if (event.getView().getTitle() != ParametersSelectionView.getViewID()) return;
-
-        InventoryClickEvent.getHandlerList().unregister(ParametersSelectionView.getInstance());
     }
 
     @EventHandler
@@ -72,11 +61,11 @@ public class ConfigurablePluginListener implements Listener {
             launchGame(event.getPlayer());
         } else if (ItemHelper.isExactlySameItemKind(event.getItem(), getParametersItem())) {
             event.setCancelled(true);
-            openParametersView(event.getPlayer());
+            parametersSelectionView.open(event.getPlayer());
         } else if (ItemHelper.isExactlySameItemKind(event.getItem(), getCancelItem())) {
             event.setCancelled(true);
             regivePlayerStuff(event.getPlayer());
-            close(event.getPlayer());
+            close();
         }
     }
 
@@ -119,7 +108,7 @@ public class ConfigurablePluginListener implements Listener {
         player.sendMessage(ChatHelper.feedback("Le plugin est lancé"));
         regivePlayerStuff(player);
         currentlyConfiguringPlugin.start();
-        close(player);
+        close();
     }
 
     private void regivePlayerStuff(Player player) {
@@ -127,8 +116,7 @@ public class ConfigurablePluginListener implements Listener {
         player.getInventory().setContents(opPlayerInventoryContent);
     }
 
-    private void close(Player player) {
-        ParametersSelectionView.getInstance().close();
+    private void close() {
         currentlyConfiguringPlugin = null;
         unregister();
     }

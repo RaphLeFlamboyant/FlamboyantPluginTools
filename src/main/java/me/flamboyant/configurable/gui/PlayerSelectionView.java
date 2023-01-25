@@ -1,6 +1,6 @@
-package me.flamboyant.configurable.gui.view;
+package me.flamboyant.configurable.gui;
 
-import me.flamboyant.configurable.gui.wrapper.items.PlayerSelectionParameterItem;
+import me.flamboyant.configurable.gui.items.PlayerSelectionParameterItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

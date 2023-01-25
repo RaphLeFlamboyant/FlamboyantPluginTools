@@ -1,4 +1,4 @@
-package me.flamboyant.configurable.gui.wrapper.items;
+package me.flamboyant.configurable.gui.items;
 
 import me.flamboyant.configurable.parameters.BooleanParameter;
 
