@@ -1,7 +1,7 @@
 package me.flamboyant.configurable.gui;
 
 import me.flamboyant.configurable.gui.view.ParametersSelectionView;
-import me.flamboyant.utils.ChatColorUtils;
+import me.flamboyant.utils.ChatHelper;
 import me.flamboyant.utils.Common;
 import me.flamboyant.utils.ILaunchablePlugin;
 import me.flamboyant.utils.ItemHelper;
@@ -116,7 +116,7 @@ public class ConfigurablePluginListener implements Listener {
 
     private void launchGame(Player player) {
         System.out.println("Le plugin est lancé");
-        player.sendMessage(ChatColorUtils.feedback("Le plugin est lancé"));
+        player.sendMessage(ChatHelper.feedback("Le plugin est lancé"));
         regivePlayerStuff(player);
         currentlyConfiguringPlugin.start();
         close(player);
