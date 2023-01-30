@@ -1,12 +1,11 @@
-package me.flamboyant.configurable.gui.wrapper.items;
+package me.flamboyant.configurable.gui.items;
 
 import me.flamboyant.configurable.parameters.SinglePlayerParameter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.SkullMeta;
 
-public class SinglePlayerParameterItem extends AParameterItem {
+public class SinglePlayerParameterItem extends ATraversableParameterItem {
     private SinglePlayerParameter parameter;
     private int index = -1;
 
@@ -25,13 +24,13 @@ public class SinglePlayerParameterItem extends AParameterItem {
        super.updateItem();
 
        if (index == -1)
-           item.setType(Material.BARRIER);
+           iconItem.setType(Material.BARRIER);
        else {
-           item.setType(Material.PLAYER_HEAD);
+           iconItem.setType(Material.PLAYER_HEAD);
 
-           SkullMeta skull = (SkullMeta) item.getItemMeta();
+           SkullMeta skull = (SkullMeta) iconItem.getItemMeta();
            skull.setOwningPlayer(parameter.getPossibleValues()[index]);
-           item.setItemMeta(skull);
+           iconItem.setItemMeta(skull);
        }
     }
 
@@ -41,7 +40,7 @@ public class SinglePlayerParameterItem extends AParameterItem {
     }
 
     @Override
-    protected void doLeftClickModification(Inventory viewClickFrom) {
+    protected void doLeftClickAction() {
         if (++index == parameter.getPossibleValues().length) {
             if (!parameter.isNullable()) index = 0;
             else {
@@ -54,7 +53,7 @@ public class SinglePlayerParameterItem extends AParameterItem {
     }
 
     @Override
-    protected void doRightClickModification(Inventory viewClickFrom) {
+    protected void doRightClickAction() {
         if (index == -1) index = parameter.getPossibleValues().length;
         if (--index < 0) {
             if (!parameter.isNullable()) index = parameter.getPossibleValues().length - 1;

@@ -1,9 +1,8 @@
-package me.flamboyant.configurable.gui.wrapper.items;
+package me.flamboyant.configurable.gui.items;
 
 import me.flamboyant.configurable.parameters.StringSelectionParameter;
-import org.bukkit.inventory.Inventory;
 
-public class StringSelectionParameterItem extends AParameterItem {
+public class StringSelectionParameterItem extends ATraversableParameterItem {
     private int index = 0;
     private StringSelectionParameter parameter;
 
@@ -20,13 +19,13 @@ public class StringSelectionParameterItem extends AParameterItem {
     }
 
     @Override
-    protected void doLeftClickModification(Inventory viewClickFrom) {
+    protected void doLeftClickAction() {
         if (++index == parameter.getPossibleValues().length) index = 0;
         parameter.setSelectedValue(parameter.getPossibleValues()[index]);
     }
 
     @Override
-    protected void doRightClickModification(Inventory viewClickFrom) {
+    protected void doRightClickAction() {
         if (--index < 0) index = parameter.getPossibleValues().length - 1;
         parameter.setSelectedValue(parameter.getPossibleValues()[index]);
     }
