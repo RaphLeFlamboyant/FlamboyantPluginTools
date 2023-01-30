@@ -8,14 +8,14 @@ import me.flamboyant.gui.view.builder.ItemGroupingMode;
 import me.flamboyant.gui.view.common.InventoryGui;
 import me.flamboyant.gui.view.icons.IIconItem;
 import me.flamboyant.utils.Common;
-import me.flamboyant.utils.ILaunchablePlugin;
+import me.flamboyant.utils.IParametrable;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ParameterUtils {
-    public static InventoryGui createParametersGui(ILaunchablePlugin plugin, ItemGroupingMode groupingMode, boolean forceAction) {
+    public static InventoryGui createParametersGui(IParametrable plugin, ItemGroupingMode groupingMode, boolean forceAction) {
         List<AParameter> parameters = plugin.getParameters();
         List<IIconItem> wrappedItems = parameters.stream().map(i -> wrapParameter(i)).collect(Collectors.toList());
 
