@@ -14,7 +14,6 @@ public abstract class AParameterItem implements IIconItem {
     protected Material representation;
 
     public AParameterItem(AParameter parameter) {
-        this.iconItem = new ItemStack(parameter.getRepresentation());
         this.category = parameter.getCategory();
         this.parameterName = parameter.getParameterName();
         this.description = parameter.getDescription();
