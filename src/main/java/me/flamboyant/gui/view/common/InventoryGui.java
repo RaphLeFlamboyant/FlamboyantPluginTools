@@ -54,7 +54,9 @@ public class InventoryGui implements Listener {
             return;
         }
 
-        opt.get().onClick(event);
+        IIconItem iconItem = opt.get();
+        iconItem.onClick(event);
+        event.getClickedInventory().setItem(event.getSlot(), iconItem.getItem());
     }
 
     @EventHandler

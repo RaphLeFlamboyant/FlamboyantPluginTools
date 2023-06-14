@@ -10,15 +10,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 
 public abstract class ATraversableParameterItem extends AParameterItem {
-    private String description;
-    private String parameterName;
-
     public ATraversableParameterItem(AParameter parameter) {
         super(parameter);
-        this.parameterName = parameter.getParameterName();
-        this.description = parameter.getDescription();
-
-        Bukkit.getScheduler().runTaskLater(Common.plugin, () -> updateItem(), 1);
     }
 
     @Override
