@@ -48,7 +48,7 @@ public class InventoryGui implements Listener {
         if (clicked == null || clicked.getType().isAir()) return;
         if (!event.isRightClick() && !event.isLeftClick()) return;
 
-        Optional<IIconItem> opt = icons.stream().filter(i -> i.getItem() == clicked).findFirst();
+        Optional<IIconItem> opt = icons.stream().filter(i -> i.getItem().equals(clicked)).findFirst();
         if (!opt.isPresent()) {
             Bukkit.getLogger().warning(event.getWhoClicked().getName() + " selected an item of type " + clicked.getType() + " in the view " + viewName + " but didn't find matching icon for it");
             return;
