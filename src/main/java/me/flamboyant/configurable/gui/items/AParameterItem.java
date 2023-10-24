@@ -35,6 +35,11 @@ public abstract class AParameterItem implements IIconItem {
         return iconItem;
     }
 
+    @Override
+    public boolean closeViewOnClick() {
+        return false;
+    }
+
     protected void updateItem() {
         ItemMeta meta = iconItem.getItemMeta();
         meta.setDisplayName(parameterName);
