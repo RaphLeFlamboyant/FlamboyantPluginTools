@@ -25,6 +25,11 @@ public class PageSwapIconItem implements IIconItem {
     }
 
     @Override
+    public boolean closeViewOnClick() {
+        return false;
+    }
+
+    @Override
     public void onClick(InventoryClickEvent event) {
         event.getWhoClicked().openInventory(targetInventory);
     }

@@ -26,11 +26,19 @@ public class InventoryGui implements Listener {
     private List<IInventoryGuiVisitor> visitors = new ArrayList<>();
     private HashSet<Player> playerOpeningIntentory = new HashSet<>();
 
-    public InventoryGui(String viewName, List<Inventory> pages, List<IIconItem> icons, boolean forceAction) {
-        this.pages = pages;
-        this.viewName = viewName;
-        this.icons = icons;
-        this.forceAction = forceAction;
+    public InventoryGui(InventoryGuiParameters parameters) {
+        if (parameters.ViewName == null
+                || parameters.Pages == null
+                || parameters.Pages.size() == 0
+                || parameters.Icons == null
+                || parameters.Icons.size() == 0) {
+            Bukkit.getLogger().warning("Inventory GUI parameters are wrong !");
+        }
+
+        this.pages = parameters.Pages;
+        this.viewName = parameters.ViewName;
+        this.icons = parameters.Icons;
+        this.forceAction = parameters.ForceAction;
     }
 
     public void open(Player player) {
@@ -66,6 +74,9 @@ public class InventoryGui implements Listener {
         IIconItem iconItem = opt.get();
         iconItem.onClick(event);
         event.getClickedInventory().setItem(event.getSlot(), iconItem.getItem());
+        if (iconItem.closeViewOnClick()) {
+            event.getWhoClicked().closeInventory();
+        }
     }
 
     @EventHandler

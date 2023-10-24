@@ -6,5 +6,6 @@ import org.bukkit.inventory.ItemStack;
 public interface IIconItem {
     String getCategory();
     ItemStack getItem();
+    boolean closeViewOnClick();
     void onClick(InventoryClickEvent event);
 }

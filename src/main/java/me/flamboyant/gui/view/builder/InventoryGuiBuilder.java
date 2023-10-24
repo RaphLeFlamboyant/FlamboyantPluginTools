@@ -1,5 +1,6 @@
 package me.flamboyant.gui.view.builder;
 
+import me.flamboyant.gui.view.common.InventoryGuiParameters;
 import me.flamboyant.gui.view.icons.IIconItem;
 import me.flamboyant.gui.view.common.InventoryGui;
 import me.flamboyant.gui.view.icons.impl.PageSwapIconItem;
@@ -30,7 +31,13 @@ public class InventoryGuiBuilder implements IInventoryGuiBuilder {
         List<Inventory> pages = fillGui(items, name, inventorySize, finalIconList);
         finalIconList.addAll(icons);
 
-        return new InventoryGui(name, pages, icons, forceAction);
+        InventoryGuiParameters parameters = new InventoryGuiParameters();
+        parameters.ViewName = name;
+        parameters.Icons = icons;
+        parameters.Pages = pages;
+        parameters.ForceAction = forceAction;
+
+        return new InventoryGui(parameters);
     }
 
     private List<ItemStack> generateViewItems(List<IIconItem> icons, int inventorySize, ItemGroupingMode groupingMode) {
