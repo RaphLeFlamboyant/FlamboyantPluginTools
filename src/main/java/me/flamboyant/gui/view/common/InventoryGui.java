@@ -27,18 +27,18 @@ public class InventoryGui implements Listener {
     private HashSet<Player> playerOpeningIntentory = new HashSet<>();
 
     public InventoryGui(InventoryGuiParameters parameters) {
-        if (parameters.ViewName == null
-                || parameters.Pages == null
-                || parameters.Pages.size() == 0
-                || parameters.Icons == null
-                || parameters.Icons.size() == 0) {
+        if (parameters.viewName == null
+                || parameters.pages == null
+                || parameters.pages.size() == 0
+                || parameters.iconItems == null
+                || parameters.iconItems.size() == 0) {
             Bukkit.getLogger().warning("Inventory GUI parameters are wrong !");
         }
 
-        this.pages = parameters.Pages;
-        this.viewName = parameters.ViewName;
-        this.icons = parameters.Icons;
-        this.forceAction = parameters.ForceAction;
+        this.pages = parameters.pages;
+        this.viewName = parameters.viewName;
+        this.icons = parameters.iconItems;
+        this.forceAction = parameters.forceAction;
     }
 
     public void open(Player player) {

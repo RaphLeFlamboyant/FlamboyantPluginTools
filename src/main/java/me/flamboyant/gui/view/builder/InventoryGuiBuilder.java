@@ -17,6 +17,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class InventoryGuiBuilder implements IInventoryGuiBuilder {
+    private static InventoryGuiBuilder instance;
+
+    public static InventoryGuiBuilder getInstance() {
+        if (instance == null) {
+            instance = new InventoryGuiBuilder();
+        }
+
+        return instance;
+    }
+
+    private InventoryGuiBuilder() {}
+
     private static ItemStack emptyItem = new ItemStack(Material.AIR);
 
     @Override
@@ -32,10 +44,10 @@ public class InventoryGuiBuilder implements IInventoryGuiBuilder {
         finalIconList.addAll(icons);
 
         InventoryGuiParameters parameters = new InventoryGuiParameters();
-        parameters.ViewName = name;
-        parameters.Icons = icons;
-        parameters.Pages = pages;
-        parameters.ForceAction = forceAction;
+        parameters.viewName = name;
+        parameters.iconItems = icons;
+        parameters.pages = pages;
+        parameters.forceAction = forceAction;
 
         return new InventoryGui(parameters);
     }

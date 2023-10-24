@@ -6,8 +6,8 @@ import org.bukkit.inventory.Inventory;
 import java.util.List;
 
 public class InventoryGuiParameters {
-    public String ViewName;
-    public List<Inventory> Pages;
-    public List<IIconItem> Icons;
-    public boolean ForceAction = false;
+    public String viewName;
+    public List<Inventory> pages;
+    public List<IIconItem> iconItems;
+    public boolean forceAction = false;
 }

@@ -19,7 +19,7 @@ public class ParameterUtils {
         List<AParameter> parameters = plugin.getParameters();
         List<IIconItem> wrappedItems = parameters.stream().map(i -> wrapParameter(i)).collect(Collectors.toList());
 
-        IInventoryGuiBuilder builder = new InventoryGuiBuilder();
+        IInventoryGuiBuilder builder = InventoryGuiBuilder.getInstance();
 
         return builder.buildView(wrappedItems,
                 "Paramètres de la partie",
