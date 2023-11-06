@@ -84,6 +84,7 @@ public class InventoryGui implements Listener {
         Inventory inventory = event.getInventory();
         if (event.getPlayer().getType() != EntityType.PLAYER) return;
         Player player = (Player)event.getPlayer();
+        if (!playerOpeningIntentory.contains(player)) return;
         if (!pages.contains(inventory)) return;
         if (forceAction)
             Bukkit.getScheduler().runTaskLater(Common.plugin, () -> event.getPlayer().openInventory(inventory), 1);
