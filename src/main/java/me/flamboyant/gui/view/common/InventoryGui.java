@@ -108,7 +108,7 @@ public class InventoryGui implements Listener {
         }
     }
 
-    private void close(Player player) {
+    public void close(Player player) {
         onClose(player);
 
         playerOpeningIntentory.remove(player);
