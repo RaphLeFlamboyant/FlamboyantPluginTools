@@ -1,36 +1,24 @@
 package me.flamboyant.gui.view.icons.impl;
 
 import me.flamboyant.gui.view.icons.IIconItem;
+import me.flamboyant.utils.PlayerCallback;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class PageSwapIconItem implements IIconItem {
-    protected ItemStack iconItem;
+public class PageSwapIconItem extends CallbackIconItem {
     private Inventory targetInventory;
 
-    public PageSwapIconItem(ItemStack iconItem, Inventory targetInventory) {
-        this.iconItem = iconItem;
+    public PageSwapIconItem(PlayerCallback callback, ItemStack item, Inventory targetInventory) {
+        super(callback, "", item, false);
+
         this.targetInventory = targetInventory;
     }
 
     @Override
-    public String getCategory() {
-        return "";
-    }
-
-    @Override
-    public ItemStack getItem() {
-        return iconItem;
-    }
-
-    @Override
-    public boolean closeViewOnClick() {
-        return false;
-    }
-
-    @Override
-    public void onClick(InventoryClickEvent event) {
+    protected void clickAction(InventoryClickEvent event) {
+        super.clickAction(event);
         event.getWhoClicked().openInventory(targetInventory);
     }
 }

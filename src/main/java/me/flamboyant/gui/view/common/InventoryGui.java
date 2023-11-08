@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-public class InventoryGui implements Listener {
+public class InventoryGui implements Listener, IInventoryGui {
     private boolean forceAction;
     private String viewName;
     private List<IIconItem> icons;
@@ -41,6 +41,7 @@ public class InventoryGui implements Listener {
         this.forceAction = parameters.forceAction;
     }
 
+    @Override
     public void open(Player player) {
         onOpen();
         player.openInventory(pages.get(0));
@@ -51,6 +52,7 @@ public class InventoryGui implements Listener {
         playerOpeningIntentory.add(player);
     }
 
+    @Override
     public String getViewName() {
         return viewName;
     }
@@ -93,10 +95,12 @@ public class InventoryGui implements Listener {
             close(player);
     }
 
+    @Override
     public void addVisitor(IInventoryGuiVisitor visitor) {
         visitors.add(visitor);
     }
 
+    @Override
     public void removeVisitor(IInventoryGuiVisitor visitor) {
         visitors.remove(visitor);
     }
@@ -110,6 +114,7 @@ public class InventoryGui implements Listener {
         }
     }
 
+    @Override
     public void close(Player player) {
         onClose(player);
 

@@ -150,7 +150,6 @@ public class InventoryGuiBuilder implements IInventoryGuiBuilder {
         return pages;
     }
 
-
     private PageSwapIconItem generateNextPageItem(Inventory target) {
         ItemStack item = ItemHelper.generateItem(Material.PAPER, 1, "Page suivante", Arrays.asList(), false, null, true, false);
         return new PageSwapIconItem(item, target);
