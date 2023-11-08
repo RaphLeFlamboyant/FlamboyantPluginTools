@@ -75,6 +75,7 @@ public class InventoryGui implements Listener {
         iconItem.onClick(event);
         event.getClickedInventory().setItem(event.getSlot(), iconItem.getItem());
         if (iconItem.closeViewOnClick()) {
+            close((Player)event.getWhoClicked());
             event.getWhoClicked().closeInventory();
         }
     }
