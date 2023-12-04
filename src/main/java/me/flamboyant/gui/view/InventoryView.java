@@ -1,8 +1,8 @@
 package me.flamboyant.gui.view;
 
 import me.flamboyant.gui.GuiActionCallback;
-import me.flamboyant.gui.view.icon.Icon;
-import me.flamboyant.gui.view.icon.IconClickHandler;
+import me.flamboyant.gui.view.iconing.Icon;
+import me.flamboyant.gui.view.iconing.IconClickHandler;
 import me.flamboyant.utils.Common;
 import me.flamboyant.utils.ItemHelper;
 import org.bukkit.Bukkit;
