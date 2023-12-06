@@ -1,13 +1,14 @@
 package me.flamboyant.configurable.gui.items;
 
 import me.flamboyant.configurable.parameters.EnumParameter;
+import me.flamboyant.gui.view.IconController;
 
-public class EnumParameterItem extends ATraversableParameterItem {
+public class EnumParameterItem extends AContinuousParameterControllerWrapper {
     private int index = 0;
     private EnumParameter parameter;
 
-    public EnumParameterItem(EnumParameter parameter) {
-        super(parameter);
+    public EnumParameterItem(EnumParameter parameter, IconController controllerToWrap) {
+        super(parameter, controllerToWrap);
 
         this.parameter = parameter;
         while (parameter.getPossibleValues()[index] != parameter.getSelectedValue()) index++;

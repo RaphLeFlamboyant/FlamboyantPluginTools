@@ -1,131 +1,139 @@
 package me.flamboyant.configurable.gui;
 
 import me.flamboyant.configurable.gui.items.PlayerSelectionParameterItem;
-import org.bukkit.Bukkit;
+import me.flamboyant.gui.GuiActionCallback;
+import me.flamboyant.gui.view.IconController;
+import me.flamboyant.gui.view.InventoryView;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-public class PlayerSelectionView implements Listener {
-    private static final int inventorySize = 9 * 6;
-    private List<ItemStack> playerItems = new ArrayList<>();
-    private Inventory view;
-    private PlayerSelectionParameterItem playerParameters;
+public class PlayerSelectionView {
+    private static final String viewName = "Sélection de joueur";
+    private static final String allPlayers = "Tous les joueurs";
+    private static final String backToMenu = "Retour au menu";
+    private InventoryView wrappedView;
+    private PlayerSelectionParameterItem parameterItem;
+    private HashMap<String, IconController> playerNameToController;
+    private IconController allPlayersIconController;
+    private IconController backToMenuIconController;
+    private GuiActionCallback closeCallback;
 
-    public PlayerSelectionView(Player[] possibleValues, PlayerSelectionParameterItem playerParameters) {
-        this.playerParameters = playerParameters;
+    public PlayerSelectionView(Player[] players, PlayerSelectionParameterItem parameterItem, GuiActionCallback closeCallback) {
+        this.closeCallback = closeCallback;
+        this.parameterItem = parameterItem;
+        playerNameToController = new HashMap<>();
 
-        view = Bukkit.createInventory(null, inventorySize, getViewId());
-        int index = 0;
-        for (Player player : possibleValues) {
+        createView(players);
+    }
+
+    public void openInventoryForPlayer(Player player) {
+        wrappedView.openPlayerView(player);
+    }
+
+    private void createView(Player[] players) {
+        List<IconController> iconList = new ArrayList<>();
+
+        int id = 1;
+        for (Player player : players) {
             ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta skull = (SkullMeta) playerHead.getItemMeta();
             skull.setDisplayName(player.getDisplayName());
             skull.setLore(Arrays.asList(getValueString(false)));
             skull.setOwningPlayer(player);
             playerHead.setItemMeta(skull);
-            addItemSelectionVisual(playerHead);
-            playerItems.add(playerHead);
+            if (parameterItem.getConcernedPlayers().contains(player))
+                addItemSelectionVisual(playerHead);
 
-            view.setItem((inventorySize / 2) - (possibleValues.length / 2) + index, playerHead);
-            index++;
+            IconController controller = new IconController(id++);
+            controller.setItemIcon(playerHead);
+            controller.setLeftClickCallback((p) -> onPlayerLeftClick(player.getDisplayName()));
+            controller.setRightClickCallback((p) -> onPlayerRightClick(player.getDisplayName()));
+
+            iconList.add(controller);
+            playerNameToController.put(player.getDisplayName(), controller);
         }
 
         ItemStack allPlayersItem = new ItemStack(Material.LEVER);
         ItemMeta meta = allPlayersItem.getItemMeta();
-        meta.setDisplayName("Tous les joueurs");
+        meta.setDisplayName(allPlayers);
         meta.setLore(Arrays.asList(getValueString(false)));
         allPlayersItem.setItemMeta(meta);
-        view.setItem(inventorySize - 1, allPlayersItem);
-        if (playerParameters.isAllPlayers()) onAllPlayersSelected(allPlayersItem);
+
+        IconController controller = new IconController(id++);
+        controller.setItemIcon(allPlayersItem);
+        controller.setLeftClickCallback((p) -> onAllPlayerLeftClick());
+        controller.setRightClickCallback((p) -> onAllPlayerRightClick());
+        allPlayersIconController = controller;
+        if (parameterItem.isAllPlayers()) onAllPlayerLeftClick();
 
         ItemStack previous = new ItemStack(Material.REDSTONE);
         previous.addUnsafeEnchantment(Enchantment.ARROW_FIRE, 1);
         meta = previous.getItemMeta();
-        meta.setDisplayName("Revenir au menu");
+        meta.setDisplayName(backToMenu);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         previous.setItemMeta(meta);
-        view.setItem(0, allPlayersItem);
+
+        controller = new IconController(id++);
+        controller.setItemIcon(previous);
+        controller.setLeftClickCallback((p) -> p.closeInventory());
+        backToMenuIconController = controller;
+
+        wrappedView = new InventoryView(viewName, iconList);
+        wrappedView.addCloseViewListener(this::onInventoryClosed);
     }
 
-    public String getViewId() {
-        return "Sélection des joueurs";
+    private void onInventoryClosed(Player player) {
+        playerNameToController.clear();
+        allPlayersIconController = null;
+        backToMenuIconController = null;
+        wrappedView = null;
+        closeCallback.runAction(player);
+        closeCallback = null;
     }
 
-    public Inventory getView() {
-        return view;
+    private void onPlayerLeftClick(String playerClickedName) {
+        parameterItem.doLeftClickOnPlayer(playerClickedName);
+        addItemSelectionVisual(playerNameToController.get(playerClickedName).getItemIcon());
     }
 
-    private String getValueString(boolean value) {
-        return value ? "YES" : "NO";
+    private void onPlayerRightClick(String playerClickedName) {
+        parameterItem.doRightClickOnPlayer(playerClickedName);
+        removeItemSelectionVisual(playerNameToController.get(playerClickedName).getItemIcon());
+        removeItemSelectionVisual(allPlayersIconController.getItemIcon());
     }
 
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        Inventory inventory = event.getInventory();
-        if (inventory != view) return;
-        event.setCancelled(true);
-        if (event.getSlotType() == InventoryType.SlotType.QUICKBAR) return;
-        ItemStack clicked = event.getCurrentItem();
-        if (clicked == null || clicked.getType().isAir()) return;
+    private void onAllPlayerLeftClick() {
+        parameterItem.doLeftClickAllPlayers();
+        addItemSelectionVisual(allPlayersIconController.getItemIcon());
 
-        String displayName = clicked.getItemMeta().getDisplayName();
-        if (displayName.equals("Tous les joueurs")) {
-            if (event.isLeftClick()) onAllPlayersSelected(clicked);
-            if (event.isRightClick()) onAllPlayersUnselected(clicked);
-        }
-        else if (displayName.equals("Revenir au menu")) {
-            event.getWhoClicked().closeInventory();
-        }
-        else {
-            if (event.isLeftClick()) onPlayerSelected(clicked);
-            if (event.isRightClick()) onPlayerUnselected(clicked);
-        }
-    }
-
-    private void onPlayerSelected(ItemStack playerItem) {
-        playerParameters.doLeftClickOnPlayer(playerItem.getItemMeta().getDisplayName());
-        addItemSelectionVisual(playerItem);
-    }
-
-    private void onPlayerUnselected(ItemStack playerItem) {
-        playerParameters.doRightClickOnPlayer(playerItem.getItemMeta().getDisplayName());
-        removeItemSelectionVisual(playerItem);
-    }
-
-    private void onAllPlayersSelected(ItemStack allPlayersItem) {
-        playerParameters.doRightClickAllPlayers();
-        addItemSelectionVisual(allPlayersItem);
-
-        for (ItemStack playerItem : playerItems) {
-            addItemSelectionVisual(playerItem);
-            playerParameters.doRightClickOnPlayer(playerItem.getItemMeta().getDisplayName());
+        for (String playerName : playerNameToController.keySet()) {
+            addItemSelectionVisual(playerNameToController.get(playerName).getItemIcon());
+            parameterItem.doLeftClickOnPlayer(playerName);
         }
     }
 
-    private void onAllPlayersUnselected(ItemStack allPlayersItem) {
-        playerParameters.doLeftClickAllPlayers();
-        removeItemSelectionVisual(allPlayersItem);
+    private void onAllPlayerRightClick() {
+        parameterItem.doRightClickAllPlayers();
+        removeItemSelectionVisual(allPlayersIconController.getItemIcon());
+
+        for (String playerName : playerNameToController.keySet()) {
+            removeItemSelectionVisual(playerNameToController.get(playerName).getItemIcon());
+            parameterItem.doRightClickOnPlayer(playerName);
+        }
     }
 
     private void addItemSelectionVisual(ItemStack item) {
         item.addUnsafeEnchantment(Enchantment.ARROW_FIRE, 1);
         ItemMeta meta = item.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        meta.setLore(Arrays.asList("YES"));
+        meta.setLore(Arrays.asList(getValueString(true)));
         item.setItemMeta(meta);
     }
 
@@ -133,11 +141,7 @@ public class PlayerSelectionView implements Listener {
         item.removeEnchantment(Enchantment.ARROW_FIRE);
     }
 
-    public void close() {
-        InventoryClickEvent.getHandlerList().unregister(this);
-        playerItems.clear();
-
-        if (view != null) view.clear();
-        view = null;
+    private String getValueString(boolean value) {
+        return value ? "YES" : "NO";
     }
 }
