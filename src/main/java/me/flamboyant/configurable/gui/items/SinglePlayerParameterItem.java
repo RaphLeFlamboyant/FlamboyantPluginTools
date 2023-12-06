@@ -1,16 +1,17 @@
 package me.flamboyant.configurable.gui.items;
 
 import me.flamboyant.configurable.parameters.SinglePlayerParameter;
+import me.flamboyant.gui.view.IconController;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.SkullMeta;
 
-public class SinglePlayerParameterItem extends ATraversableParameterItem {
+public class SinglePlayerParameterItem extends AContinuousParameterControllerWrapper {
     private SinglePlayerParameter parameter;
     private int index = -1;
 
-    public SinglePlayerParameterItem(SinglePlayerParameter parameter) {
-        super(parameter);
+    public SinglePlayerParameterItem(SinglePlayerParameter parameter, IconController controllerToWrap) {
+        super(parameter, controllerToWrap);
         this.parameter = parameter;
 
         for (int i = 0; i < parameter.getPossibleValues().length && index == -1; i++) {

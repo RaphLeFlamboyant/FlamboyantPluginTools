@@ -2,26 +2,29 @@ package me.flamboyant.configurable.gui.items;
 
 import me.flamboyant.configurable.gui.PlayerSelectionView;
 import me.flamboyant.configurable.parameters.PlayerSelectionParameter;
+import me.flamboyant.gui.GuiActionCallback;
+import me.flamboyant.gui.view.IconController;
 import me.flamboyant.utils.Common;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import java.util.List;
 
-public class PlayerSelectionParameterItem extends AParameterItem implements Listener {
+public class PlayerSelectionParameterItem extends AParameterControllerWrapper {
     private PlayerSelectionParameter parameter;
-    private Inventory previousInventory;
     private PlayerSelectionView playerSelectionView;
+    private GuiActionCallback closeViewCallback;
 
-    public PlayerSelectionParameterItem(PlayerSelectionParameter parameter) {
-        super(parameter);
+    public PlayerSelectionParameterItem(PlayerSelectionParameter parameter,
+                                        IconController controllerToWrap,
+                                        GuiActionCallback closeViewCallback) {
+        super(parameter, controllerToWrap);
+        this.closeViewCallback = closeViewCallback;
 
         ItemMeta meta = iconItem.getItemMeta();
         meta.setDisplayName(parameter.getParameterName());
@@ -29,31 +32,20 @@ public class PlayerSelectionParameterItem extends AParameterItem implements List
         iconItem.setItemMeta(meta);
 
         this.parameter = parameter;
+
+        iconController.setLeftClickCallback(this::onClick);
     }
 
-    @Override
-    public void onClick(InventoryClickEvent event) {
-        openPlayerSelectionView(event.getClickedInventory());
+    private void onClick(Player player) {
+        openPlayerSelectionView(player);
     }
 
-    private void openPlayerSelectionView(Inventory viewClickFrom) {
-        previousInventory = viewClickFrom;
-        playerSelectionView = new PlayerSelectionView(parameter.getPossibleValues(), this);
-
-        for (HumanEntity ety : viewClickFrom.getViewers()) {
-            Bukkit.getScheduler().runTaskLater(Common.plugin, () -> ety.openInventory(playerSelectionView.getView()), 1L);
-        }
-
-        Common.server.getPluginManager().registerEvents(this, Common.plugin);
+    private void openPlayerSelectionView(Player player) {
+        playerSelectionView = new PlayerSelectionView(parameter.getPossibleValues(), this, closeViewCallback);
+        Bukkit.getScheduler().runTaskLater(Common.plugin, () -> playerSelectionView.openInventoryForPlayer(player), 1L);
     }
 
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        if (event.getInventory() != playerSelectionView.getView()) return;
-        Bukkit.getScheduler().runTaskLater(Common.plugin, () -> event.getPlayer().openInventory(previousInventory), 1L);
-        playerSelectionView.close();
-        InventoryCloseEvent.getHandlerList().unregister(this);
-    }
+    public List<Player> getConcernedPlayers() { return parameter.getConcernedPlayers(); }
 
     // Disable player
     public void doRightClickOnPlayer(String playerName) {

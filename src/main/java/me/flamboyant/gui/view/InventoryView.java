@@ -90,14 +90,22 @@ public class InventoryView implements Listener {
             return;
         }
 
-        playerToPageIndex.remove(player);
         player.closeInventory();
+        playerToPageIndex.remove(player);
 
         if (playerToPageIndex.isEmpty()) {
             InventoryCloseEvent.getHandlerList().unregister(this);
             IconClickHandler.getInstance().deactivateIcon(builtIconList);
             IconClickHandler.getInstance().removeValidInventories(pages);
         }
+    }
+
+    public void addCloseViewListener(GuiActionCallback closeViewActionCallback) {
+        inventoryViewCloseCallback.add(closeViewActionCallback);
+    }
+
+    public void removeCloseViewListener(GuiActionCallback closeViewActionCallback) {
+        inventoryViewCloseCallback.remove(closeViewActionCallback);
     }
 
     public void updateIcon(IconController iconController)
@@ -118,10 +126,14 @@ public class InventoryView implements Listener {
     @EventHandler
     private void onInventoryClose(InventoryCloseEvent event) {
         if (!playerToPageIndex.containsKey(event.getPlayer())) return;
-        if (!pages.contains(event.getInventory())) return;
         // index is changed when navigating so it means the player didn't close on purpose
         if (event.getInventory() != pages.get(playerToPageIndex.get(event.getPlayer()))) return;
-        event.getPlayer().getOpenInventory().getTopInventory()
+
+        for (GuiActionCallback closeCallback : inventoryViewCloseCallback) {
+            Player player = (Player)event.getPlayer();
+            closeCallback.runAction(player);
+            closePlayerView(player);
+        }
     }
 
     private void addIcon(Icon icon) {

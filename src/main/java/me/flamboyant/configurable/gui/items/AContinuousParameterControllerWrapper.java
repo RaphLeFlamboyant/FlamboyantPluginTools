@@ -1,26 +1,20 @@
 package me.flamboyant.configurable.gui.items;
 
 import me.flamboyant.configurable.parameters.AParameter;
-import me.flamboyant.utils.Common;
-import org.bukkit.Bukkit;
+import me.flamboyant.gui.view.IconController;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 
-public abstract class ATraversableParameterItem extends AParameterItem {
-    public ATraversableParameterItem(AParameter parameter) {
-        super(parameter);
-    }
+public abstract class AContinuousParameterControllerWrapper extends AParameterControllerWrapper {
+    public AContinuousParameterControllerWrapper(AParameter parameter, IconController controllerToWrap) {
+        super(parameter, controllerToWrap);
 
-    @Override
-    public void onClick(InventoryClickEvent event) {
-        if (event.isLeftClick())
-            doLeftClickAction();
-        else if (event.isRightClick())
-            doRightClickAction();
-        updateItem();
+        iconController.setLeftClickCallback(this::rightClickCallback);
+        iconController.setRightClickCallback(this::leftClickCallback);
     }
 
     protected void updateItem() {
@@ -35,6 +29,16 @@ public abstract class ATraversableParameterItem extends AParameterItem {
     }
 
     protected abstract String getValueText();
+
+    private void rightClickCallback(Player player) {
+        doRightClickAction();
+        updateItem();
+    }
+
+    private void leftClickCallback(Player player) {
+        doLeftClickAction();
+        updateItem();
+    }
 
     protected abstract void doRightClickAction();
     protected abstract void doLeftClickAction();

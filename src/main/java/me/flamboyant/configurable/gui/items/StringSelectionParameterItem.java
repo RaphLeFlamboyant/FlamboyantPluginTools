@@ -1,13 +1,14 @@
 package me.flamboyant.configurable.gui.items;
 
 import me.flamboyant.configurable.parameters.StringSelectionParameter;
+import me.flamboyant.gui.view.IconController;
 
-public class StringSelectionParameterItem extends ATraversableParameterItem {
+public class StringSelectionParameterItem extends AContinuousParameterControllerWrapper {
     private int index = 0;
     private StringSelectionParameter parameter;
 
-    public StringSelectionParameterItem(StringSelectionParameter parameter) {
-        super(parameter);
+    public StringSelectionParameterItem(StringSelectionParameter parameter, IconController controllerToWrap) {
+        super(parameter, controllerToWrap);
 
         this.parameter = parameter;
         while (parameter.getPossibleValues()[index] != parameter.getSelectedValue()) index++;

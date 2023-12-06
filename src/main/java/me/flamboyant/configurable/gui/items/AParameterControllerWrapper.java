@@ -1,44 +1,28 @@
 package me.flamboyant.configurable.gui.items;
 
-import me.flamboyant.gui.view.icons.IIconItem;
+import me.flamboyant.gui.view.IconController;
 import me.flamboyant.configurable.parameters.AParameter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public abstract class AParameterItem implements IIconItem {
+public abstract class AParameterControllerWrapper {
     protected ItemStack iconItem;
     protected String category;
     protected String description;
     protected String parameterName;
     protected Material representation;
+    protected IconController iconController;
 
-    public AParameterItem(AParameter parameter) {
+    public AParameterControllerWrapper(AParameter parameter, IconController controllerToWrap) {
         this.category = parameter.getCategory();
         this.parameterName = parameter.getParameterName();
         this.description = parameter.getDescription();
         this.representation = parameter.getRepresentation();
+        this.iconController = controllerToWrap;
     }
 
-    @Override
-    public String getCategory() {
-        return category;
-    }
-
-    @Override
-    public ItemStack getItem() {
-        if (iconItem == null) {
-            iconItem = new ItemStack(representation);
-            updateItem();
-        }
-
-        return iconItem;
-    }
-
-    @Override
-    public boolean closeViewOnClick() {
-        return false;
-    }
+    public IconController getController() { return iconController; }
 
     protected void updateItem() {
         ItemMeta meta = iconItem.getItemMeta();

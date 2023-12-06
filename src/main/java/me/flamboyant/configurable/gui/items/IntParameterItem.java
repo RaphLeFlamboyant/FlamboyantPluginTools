@@ -1,12 +1,13 @@
 package me.flamboyant.configurable.gui.items;
 
 import me.flamboyant.configurable.parameters.IntParameter;
+import me.flamboyant.gui.view.IconController;
 
-public class IntParameterItem extends ATraversableParameterItem {
+public class IntParameterItem extends AContinuousParameterControllerWrapper {
     protected IntParameter parameter;
 
-    public IntParameterItem(IntParameter parameter) {
-        super(parameter);
+    public IntParameterItem(IntParameter parameter, IconController controllerToWrap) {
+        super(parameter, controllerToWrap);
 
         this.parameter = parameter;
     }
