@@ -141,6 +141,7 @@ public class InventoryView implements Listener {
         builtIconList.add(icon);
     }
 
+    // TODO : delete
     private void insertIcon(IconController iconController, int index) {
         if (builtIconList.size() % pageSize == 0) {
             Inventory lastInventory = pages.get(pages.size() - 1);
@@ -162,6 +163,7 @@ public class InventoryView implements Listener {
         }
     }
 
+    // TODO : delete
     private void deleteIcon(IconController iconController) {
         for (int i = iconIdToIconListIndex.get(iconController.getId()); i < builtIconList.size() - 1; i++) {
             Icon replacement = builtIconList.get(i + 1);
