@@ -86,7 +86,7 @@ public class PlayerSelectionView {
         backToMenuIconController = controller;
 
         wrappedView = new InventoryView(viewName, iconList);
-        wrappedView.addCloseViewListener(this::onInventoryClosed);
+        wrappedView.addCloseViewCallback(this::onInventoryClosed);
     }
 
     private void onInventoryClosed(Player player) {

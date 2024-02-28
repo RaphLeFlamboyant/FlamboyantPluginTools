@@ -100,11 +100,11 @@ public class InventoryView implements Listener {
         }
     }
 
-    public void addCloseViewListener(GuiActionCallback closeViewActionCallback) {
+    public void addCloseViewCallback(GuiActionCallback closeViewActionCallback) {
         inventoryViewCloseCallback.add(closeViewActionCallback);
     }
 
-    public void removeCloseViewListener(GuiActionCallback closeViewActionCallback) {
+    public void removeCloseViewCallback(GuiActionCallback closeViewActionCallback) {
         inventoryViewCloseCallback.remove(closeViewActionCallback);
     }
 
@@ -129,11 +129,11 @@ public class InventoryView implements Listener {
         // index is changed when navigating so it means the player didn't close on purpose
         if (event.getInventory() != pages.get(playerToPageIndex.get(event.getPlayer()))) return;
 
+        Player player = (Player)event.getPlayer();
         for (GuiActionCallback closeCallback : inventoryViewCloseCallback) {
-            Player player = (Player)event.getPlayer();
             closeCallback.runAction(player);
-            closePlayerView(player);
         }
+        closePlayerView(player);
     }
 
     private void addIcon(Icon icon) {
