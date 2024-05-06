@@ -47,6 +47,7 @@ public class ParameterView {
             ItemMeta meta = interCategoryItem.getItemMeta();
             meta.setDisplayName(category);
             interCategoryItem.setItemMeta(meta);
+            interCategoryIcon.setItemIcon(interCategoryItem);
 
             iconList.add(interCategoryIcon);
 
@@ -64,7 +65,6 @@ public class ParameterView {
 
     private int iconIdCount = 1;
     private AParameterControllerWrapper wrapParameter(AParameter parameter) {
-        IconController controller = new IconController(iconIdCount++);
         if (parameter instanceof ValueOfPlayerParameter) {
             ValueOfPlayerParameter vParam = (ValueOfPlayerParameter) parameter;
             AParameterControllerWrapper subParamItem = wrapParameter(vParam.getSubParameter());
@@ -75,10 +75,18 @@ public class ParameterView {
 
             return subParamItem;
         }
-        if (parameter instanceof BooleanParameter) return new BooleanParameterItem((BooleanParameter) parameter, controller);
-        if (parameter instanceof IntParameter) return new IntParameterItem((IntParameter) parameter, controller);
-        if (parameter instanceof PlayerSelectionParameter) return new PlayerSelectionParameterItem((PlayerSelectionParameter) parameter, controller, this::openPlayerView);
-        if (parameter instanceof SinglePlayerParameter) return new SinglePlayerParameterItem((SinglePlayerParameter) parameter, controller);
-        return new EnumParameterItem((EnumParameter) parameter, controller);
+        else {
+            IconController controller = new IconController(iconIdCount++);
+
+            if (parameter instanceof BooleanParameter)
+                return new BooleanParameterItem((BooleanParameter) parameter, controller);
+            if (parameter instanceof IntParameter) return new IntParameterItem((IntParameter) parameter, controller);
+            if (parameter instanceof PlayerSelectionParameter)
+                return new PlayerSelectionParameterItem((PlayerSelectionParameter) parameter, controller, this::openPlayerView);
+            if (parameter instanceof SinglePlayerParameter)
+                return new SinglePlayerParameterItem((SinglePlayerParameter) parameter, controller);
+
+            return new EnumParameterItem((EnumParameter) parameter, controller);
+        }
     }
 }

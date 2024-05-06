@@ -6,14 +6,15 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.SkullMeta;
 
-public class SinglePlayerParameterItem extends AContinuousParameterControllerWrapper {
-    private SinglePlayerParameter parameter;
+public class SinglePlayerParameterItem extends AContinuousParameterControllerWrapper<SinglePlayerParameter> {
     private int index = -1;
 
     public SinglePlayerParameterItem(SinglePlayerParameter parameter, IconController controllerToWrap) {
         super(parameter, controllerToWrap);
-        this.parameter = parameter;
+    }
 
+    @Override
+    protected void finishDataInitialization() {
         for (int i = 0; i < parameter.getPossibleValues().length && index == -1; i++) {
             if (parameter.getPossibleValues()[i] == parameter.getConcernedPlayer())
                 index = i;

@@ -9,12 +9,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 
-public abstract class AContinuousParameterControllerWrapper extends AParameterControllerWrapper {
-    public AContinuousParameterControllerWrapper(AParameter parameter, IconController controllerToWrap) {
+public abstract class AContinuousParameterControllerWrapper<T extends AParameter> extends AParameterControllerWrapper<T> {
+    public AContinuousParameterControllerWrapper(T parameter, IconController controllerToWrap) {
         super(parameter, controllerToWrap);
 
-        iconController.setLeftClickCallback(this::rightClickCallback);
-        iconController.setRightClickCallback(this::leftClickCallback);
+        iconController.setLeftClickCallback(this::leftClickCallback);
+        iconController.setRightClickCallback(this::rightClickCallback);
     }
 
     protected void updateItem() {

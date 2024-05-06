@@ -30,18 +30,22 @@ public class IconClickHandler implements Listener {
 
     private IconClickHandler() {}
 
-    public void activateIcon(List<me.flamboyant.gui.view.iconing.Icon> icons) {
+    public void activateIcon(List<me.flamboyant.gui.view.iconing.Icon> toActivateIcons) {
         if (icons.size() == 0) {
+            Bukkit.getLogger().info("[IconClickHandler.activateIcon] Icon list size = 0, registering events");
             Common.server.getPluginManager().registerEvents(this, Common.plugin);
         }
 
-        this.icons.addAll(icons);
+        Bukkit.getLogger().info("[IconClickHandler.activateIcon] Adding " + toActivateIcons.size() + " icons");
+        icons.addAll(toActivateIcons);
     }
 
-    public void deactivateIcon(List<me.flamboyant.gui.view.iconing.Icon> icons) {
-        this.icons.removeAll(icons);
+    public void deactivateIcon(List<me.flamboyant.gui.view.iconing.Icon> toDeactivateIcons) {
+        Bukkit.getLogger().info("[IconClickHandler.deactivateIcon] Removing " + toDeactivateIcons.size() + " icons");
+        icons.removeAll(toDeactivateIcons);
 
         if (icons.size() == 0) {
+            Bukkit.getLogger().info("[IconClickHandler.deactivateIcon] Icon list size = 0, unregistering events");
             InventoryClickEvent.getHandlerList().unregister(this);
         }
     }
@@ -58,12 +62,15 @@ public class IconClickHandler implements Listener {
     private void onInventoryClick(InventoryClickEvent event) {
         if (event.getWhoClicked().getType() != EntityType.PLAYER) return;
         Player player = (Player)event.getWhoClicked();
+        Bukkit.getLogger().info("[IconClickHandler] Player " + player.getDisplayName() + " clicked on an inventory");
         Inventory inventory = event.getInventory();
         if (!viewPages.contains(inventory)) return;
+        Bukkit.getLogger().info("[IconClickHandler] Clicked in a valid inventory");
         event.setCancelled(true);
         if (event.getSlotType() == InventoryType.SlotType.QUICKBAR) return;
         ItemStack clicked = event.getCurrentItem();
         if (clicked == null || clicked.getType().isAir()) return;
+        Bukkit.getLogger().info("[IconClickHandler] Clicked an inventory item");
 
         Optional<me.flamboyant.gui.view.iconing.Icon> opt = icons.stream().filter(i -> i.getItemIcon().equals(clicked)).findFirst();
         if (!opt.isPresent()) {

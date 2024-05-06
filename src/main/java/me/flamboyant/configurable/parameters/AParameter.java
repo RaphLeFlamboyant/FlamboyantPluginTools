@@ -13,7 +13,7 @@ public class AParameter {
         this.description = description;
         this.parameterName = parameterName;
         this.representation = representation;
-        this.category = "";
+        this.category = ".";
     }
 
     public Material getRepresentation() { return representation; }

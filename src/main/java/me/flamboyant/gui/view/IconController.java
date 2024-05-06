@@ -12,6 +12,10 @@ public class IconController {
 
     public IconController(int id) {
         this.id = id;
+
+        leftClickCallback = a -> {};
+        rightClickCallback = a -> {};
+        shiftClickCallback = a -> {};
     }
 
     public ItemStack getItemIcon() {
