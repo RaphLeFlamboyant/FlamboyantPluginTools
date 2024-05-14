@@ -9,5 +9,5 @@ import java.util.Random;
 public class Common {
     public static JavaPlugin plugin;
     public static Server server;
-    public static Random rng = new Random((new Date()).getTime());
+    public static Random rng = new Random();
 }
