@@ -41,7 +41,7 @@ public class ParameterView {
         List<IconController> iconList = new ArrayList<>();
 
         for (String category : categoryToControllers.keySet()) {
-            IconController interCategoryIcon = new IconController(-2);
+            IconController interCategoryIcon = new IconController();
 
             ItemStack interCategoryItem = new ItemStack(Material.GLASS_PANE);
             ItemMeta meta = interCategoryItem.getItemMeta();
@@ -63,7 +63,6 @@ public class ParameterView {
         wrappedView.openPlayerView(player);
     }
 
-    private int iconIdCount = 1;
     private AParameterControllerWrapper wrapParameter(AParameter parameter) {
         if (parameter instanceof ValueOfPlayerParameter) {
             ValueOfPlayerParameter vParam = (ValueOfPlayerParameter) parameter;
@@ -76,7 +75,7 @@ public class ParameterView {
             return subParamItem;
         }
         else {
-            IconController controller = new IconController(iconIdCount++);
+            IconController controller = new IconController();
 
             if (parameter instanceof BooleanParameter)
                 return new BooleanParameterItem((BooleanParameter) parameter, controller);

@@ -40,7 +40,6 @@ public class PlayerSelectionView {
     private void createView(Player[] players) {
         List<IconController> iconList = new ArrayList<>();
 
-        int id = 1;
         for (Player player : players) {
             ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta skull = (SkullMeta) playerHead.getItemMeta();
@@ -51,7 +50,7 @@ public class PlayerSelectionView {
             if (parameterItem.getConcernedPlayers().contains(player))
                 addItemSelectionVisual(playerHead);
 
-            IconController controller = new IconController(id++);
+            IconController controller = new IconController();
             controller.setItemIcon(playerHead);
             controller.setLeftClickCallback((p) -> onPlayerLeftClick(player.getDisplayName()));
             controller.setRightClickCallback((p) -> onPlayerRightClick(player.getDisplayName()));
@@ -66,7 +65,7 @@ public class PlayerSelectionView {
         meta.setLore(Arrays.asList(getValueString(false)));
         allPlayersItem.setItemMeta(meta);
 
-        IconController controller = new IconController(id++);
+        IconController controller = new IconController();
         controller.setItemIcon(allPlayersItem);
         controller.setLeftClickCallback((p) -> onAllPlayerLeftClick());
         controller.setRightClickCallback((p) -> onAllPlayerRightClick());
@@ -80,7 +79,7 @@ public class PlayerSelectionView {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         previous.setItemMeta(meta);
 
-        controller = new IconController(id++);
+        controller = new IconController();
         controller.setItemIcon(previous);
         controller.setLeftClickCallback((p) -> p.closeInventory());
         backToMenuIconController = controller;

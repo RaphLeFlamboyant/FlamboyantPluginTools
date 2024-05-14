@@ -41,6 +41,13 @@ public class InventoryView implements Listener {
     }
 
     public void initializeFrom(List<IconController> iconControllers) {
+        Bukkit.getLogger().info("[InventoryView.initializeFrom]");
+
+        if (!playerToPageIndex.isEmpty()) {
+            IconClickHandler.getInstance().removeValidInventories(pages);
+            IconClickHandler.getInstance().deactivateIcon(builtIconList);
+        }
+
         reset();
 
         Inventory currentInventory = Bukkit.createInventory(null, inventorySize, viewName);
@@ -66,6 +73,11 @@ public class InventoryView implements Listener {
             currentInventory.setItem(index++, iconController.getItemIcon());
         }
 
+        if (!playerToPageIndex.isEmpty()) {
+            IconClickHandler.getInstance().addValidInventories(pages);
+            IconClickHandler.getInstance().activateIcon(builtIconList);
+        }
+
         refreshPlayersView();
     }
 
@@ -75,10 +87,8 @@ public class InventoryView implements Listener {
             return;
         }
 
-        Bukkit.getLogger().info("[InventoryView.openPlayerView" + this.hashCode() + "]");
 
         if (playerToPageIndex.isEmpty()) {
-            Bukkit.getLogger().info("[InventoryView.openPlayerView" + this.hashCode() + "] playerToPageIndex is empty");
             Common.server.getPluginManager().registerEvents(this, Common.plugin);
             IconClickHandler.getInstance().addValidInventories(pages);
             IconClickHandler.getInstance().activateIcon(builtIconList);
@@ -89,12 +99,10 @@ public class InventoryView implements Listener {
     }
 
     public void closePlayerView(Player player) {
-        Bukkit.getLogger().info("[InventoryView.closePlayerView" + this.hashCode() + "]");
         player.closeInventory();
     }
 
     public void handlePlayerInventoryClosed(Player player) {
-        Bukkit.getLogger().info("[InventoryView.handlePlayerInventoryClosed" + this.hashCode() + "]");
         if (!playerToPageIndex.containsKey(player)) {
             Bukkit.getLogger().warning("The player " + player.getDisplayName() + " doesn't have the view " + viewName + " open.");
             return;
@@ -119,6 +127,9 @@ public class InventoryView implements Listener {
 
     public void updateIcon(IconController iconController)
     {
+        if (!idToIcon.containsKey(iconController.getId()))
+            return;
+
         Icon icon = idToIcon.get(iconController.getId());
         IconClickHandler.getInstance().deactivateIcon(Arrays.asList(icon));
         Icon replacingIcon = createIcon(iconController);
@@ -134,12 +145,9 @@ public class InventoryView implements Listener {
 
     @EventHandler
     private void onInventoryClose(InventoryCloseEvent event) {
-        Bukkit.getLogger().info("[InventoryView.onInventoryClose" + this.hashCode() + "]");
         if (!playerToPageIndex.containsKey(event.getPlayer())) return;
-        Bukkit.getLogger().info("[InventoryView.onInventoryClose" + this.hashCode() + "] Contains the player");
         // index is changed when navigating so it means the player didn't close on purpose
         if (event.getInventory() != pages.get(playerToPageIndex.get(event.getPlayer()))) return;
-        Bukkit.getLogger().info("[InventoryView.onInventoryClose" + this.hashCode() + "] Page ==");
 
         Player player = (Player)event.getPlayer();
         for (GuiActionCallback closeCallback : inventoryViewCloseCallback) {

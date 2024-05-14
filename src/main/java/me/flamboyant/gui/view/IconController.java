@@ -4,14 +4,16 @@ import me.flamboyant.gui.GuiActionCallback;
 import org.bukkit.inventory.ItemStack;
 
 public class IconController {
+    private static int nextIconId = 0;
+
     private int id;
     private ItemStack itemIcon;
     private GuiActionCallback leftClickCallback;
     private GuiActionCallback rightClickCallback;
     private GuiActionCallback shiftClickCallback;
 
-    public IconController(int id) {
-        this.id = id;
+    public IconController() {
+        this.id = nextIconId++;
 
         leftClickCallback = a -> {};
         rightClickCallback = a -> {};
